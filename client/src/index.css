@@ -1,0 +1,191 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import 'tailwindcss';
+
+/*  Dark mode driven by data-theme attribute on <html>*/
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* Keyframe Animations */
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33%       { transform: translateY(-16px) rotate(120deg); }
+  66%       { transform: translateY(-8px) rotate(240deg); }
+}
+@keyframes cardEntrance {
+  from { opacity: 0; transform: translateY(14px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Custom animation utilities */
+.animate-slide-up    { animation: slideUp 0.45s cubic-bezier(0.4, 0, 0.2, 1) both; }
+.animate-card-in     { animation: cardEntrance 0.4s cubic-bezier(0.4, 0, 0.2, 1) both; }
+
+/* Auth Animated Background */
+.auth-bg {
+  background: linear-gradient(-45deg, #f5f3ff, #ede9fe, #ddd6fe, #c4b5fd, #ede9fe, #f5f3ff);
+  background-size: 400% 400%;
+  animation: gradientShift 14s ease infinite;
+}
+[data-theme="dark"] .auth-bg {
+  background: linear-gradient(-45deg, #0f0f1a, #1a0a2e, #0a1628, #0f1639, #1a0a2e, #0f0f1a);
+  background-size: 400% 400%;
+  animation: gradientShift 12s ease infinite;
+}
+
+/* Floating ambient orbs */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.orb-1 {
+  top: 10%; left: 12%;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%);
+  animation: float 9s ease-in-out infinite;
+}
+.orb-2 {
+  bottom: 14%; right: 10%;
+  width: 240px; height: 240px;
+  background: radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%);
+  animation: float 13s ease-in-out infinite reverse;
+}
+.orb-3 {
+  top: 50%; right: 26%;
+  width: 160px; height: 160px;
+  background: radial-gradient(circle, rgba(167,139,250,0.12) 0%, transparent 70%);
+  animation: float 17s ease-in-out infinite;
+}
+
+/* Global body */
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Autofill override (browser-specific — must stay in CSS)  */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #ede9fe inset !important;
+  box-shadow: 0 0 0 1000px #ede9fe inset !important;
+  -webkit-text-fill-color: #1e1b4b !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+  caret-color: #1e1b4b !important;
+}
+[data-theme="dark"] input:-webkit-autofill,
+[data-theme="dark"] input:-webkit-autofill:hover,
+[data-theme="dark"] input:-webkit-autofill:focus,
+[data-theme="dark"] input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #1e1b3a inset !important;
+  box-shadow: 0 0 0 1000px #1e1b3a inset !important;
+  -webkit-text-fill-color: #f1f5f9 !important;
+  caret-color: #f1f5f9 !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #ddd6fe; border-radius: 3px; }
+[data-theme="dark"] ::-webkit-scrollbar-thumb { background: #334155; }
+
+/* Selection */
+::selection { background: rgba(99,102,241,0.2); }
+
+/* Reusable Tailwind component layers*/
+@layer components {
+
+  /* Auth card (Login / Signup) */
+  .auth-card {
+    @apply w-full max-w-md
+           bg-white dark:bg-white/5
+           dark:backdrop-blur-2xl
+           border border-violet-100 dark:border-white/10
+           shadow-2xl shadow-indigo-100/60 dark:shadow-black/50
+           rounded-2xl px-5 sm:px-8 py-8 sm:py-10 flex flex-col gap-5;
+  }
+
+  /* Gradient heading text */
+  .gradient-text {
+    @apply bg-linear-to-r from-indigo-600 to-purple-600
+           dark:from-indigo-400 dark:to-purple-400
+           bg-clip-text text-transparent;
+  }
+
+  /* Form input */
+  .form-input {
+    @apply w-full
+           bg-violet-100 dark:bg-white/8
+           border border-violet-200 dark:border-white/10
+           rounded-xl py-3 pl-11 pr-4
+           text-indigo-950 dark:text-slate-100
+           placeholder:text-gray-400 dark:placeholder:text-slate-500
+           outline-none
+           focus:border-indigo-400 dark:focus:border-indigo-500
+           focus:ring-2 focus:ring-indigo-200/50 dark:focus:ring-indigo-500/8
+           transition-all duration-300 text-sm;
+  }
+
+  /* Primary gradient button */
+  .btn-primary {
+    @apply relative overflow-hidden
+           bg-linear-to-r from-fuchsia-500 via-rose-500 to-orange-400
+           text-white font-semibold rounded-xl cursor-pointer
+           transition-all duration-300
+           hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-400/40
+           active:translate-y-0 active:shadow-none
+           disabled:opacity-40 disabled:cursor-not-allowed
+           disabled:hover:translate-y-0 disabled:hover:shadow-none;
+  }
+
+  /* button (cancel) */
+  .btn-ghost {
+    @apply rounded-xl border font-medium text-sm
+           flex items-center gap-1.5 cursor-pointer
+           transition-all duration-200
+           bg-violet-50 dark:bg-white/6
+           border-violet-200 dark:border-white/10
+           text-indigo-600 dark:text-slate-400
+           hover:bg-violet-100 dark:hover:bg-white/10;
+  }
+
+  /* Note card (kept for compatibility) */
+  .note-card {
+    @apply relative flex flex-col overflow-hidden
+           bg-white dark:bg-white/4
+           border border-violet-100 dark:border-white/8
+           rounded-2xl
+           shadow-sm shadow-indigo-50 dark:shadow-none
+           transition-all duration-300;
+  }
+  .note-card-hoverable {
+    @apply hover:-translate-y-1
+           hover:shadow-xl hover:shadow-indigo-100/60 dark:hover:shadow-indigo-500/18
+           hover:border-indigo-200 dark:hover:border-indigo-400/[0.28];
+  }
+
+  /* Todo card (horizontal list layout) */
+  .todo-card {
+    @apply relative flex flex-row overflow-hidden
+           bg-white dark:bg-white/4
+           border border-violet-100 dark:border-white/8
+           rounded-2xl
+           shadow-sm shadow-indigo-50 dark:shadow-none
+           transition-all duration-300;
+  }
+  .todo-card-hoverable {
+    @apply hover:shadow-lg hover:shadow-indigo-100/60 dark:hover:shadow-indigo-500/15
+           hover:border-indigo-200 dark:hover:border-indigo-400/25
+           hover:-translate-y-0.5;
+  }
+}
